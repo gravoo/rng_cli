@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <iostream>
 #include <random>
-#include "argh.h"
+#include <argparse/argparse.hpp>
 
 class random_seq_generator
 {
@@ -32,32 +32,32 @@ private:
 
 int main(int argc, char **argv)
 {
-    auto cmdl = argh::parser({"-l ,-n, -a"});
-    cmdl.parse(argc, argv);
+    argparse::ArgumentParser program("rng");
+    program.add_argument("-l","--l")
+        .help("length of generated sequences")
+        .default_value(std::size_t{8})
+        .scan<'u', std::size_t>();
 
-    if (cmdl["-h"] || cmdl["--help"])
+    program.add_argument("-n","--n")
+        .help("count of generated sequences")
+        .default_value(std::size_t{1})
+        .scan<'u', std::size_t>();
+
+    program.add_description("Generate random number sequence");
+
+    try
     {
-        std::cout << "Usage:\n";
-        std::cout << "-l=<length of generated sequence>\n";
-        std::cout << "-n=<number of generated sequence>\n";
-        std::cout << "-a=<alphabet> \n";
-        return 0;
+        program.parse_args(argc, argv);
+    }
+    catch (const std::exception& err)
+    {
+        std::cerr << err.what() << std::endl;
+        std::cerr << program;
+        std::exit(1);
     }
 
-    std::size_t sequence_length{8};
-    cmdl("-l", sequence_length);
-    if(!(cmdl({"-l"})>>sequence_length))
-    {
-        std::cerr << "Invalid sequence length, used default "<< sequence_length<< " instead \n";
-    }
-
-    std::size_t count{1};
-    cmdl("-n", count);
-    if(!(cmdl({"-n"})>>count))
-    {
-        std::cerr << "Invalid count of sequence, used default "<< count<< " instead \n";
-    }
-
-    random_seq_generator rsg(sequence_length, count);
+    auto sequence_length = program.get<std::size_t>("-l");
+    auto sequences_count = program.get<std::size_t>("-n");
+    random_seq_generator rsg(sequence_length, sequences_count);
     rsg.print_sequences();
 }
