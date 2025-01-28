@@ -7,11 +7,11 @@ Random Number Generator CLI
 - [ ] Generate sequence with user defined alphabed
 ## Usage
 ````
-$ rng -l=3
-f1e
 $ rng
 bb67b821
-$ rng -a=ZXC -n=2 -l=4
+$ rng -l 3
+f1e
+$ rng -a ZXC -n 2 -l 4
 CZXC
 XCZC
 ````
