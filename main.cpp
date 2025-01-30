@@ -10,14 +10,17 @@ int main(int argc, char **argv)
     program.add_argument("-l")
         .help("length of generated sequences")
         .default_value(std::size_t{8})
+        .nargs(1, 1)
         .scan<'u', std::size_t>();
 
     program.add_argument("-n")
         .help("count of generated sequences")
         .default_value(std::size_t{1})
+        .nargs(1, 1)
         .scan<'u', std::size_t>();
 
     program.add_argument("-a")
+        .nargs(1, 1)
         .help("set of characters for random sequences");
 
     program.add_description("Generate random number sequence");
