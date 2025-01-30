@@ -12,7 +12,7 @@ public:
     : sequence_length{sequence_length}, count{count}, printer{std::move(iprinter)}
     {
         random_enginge = std::default_random_engine(device());
-        uniform_dist = std::uniform_int_distribution<int>(0, printer->get_range());
+        uniform_dist = std::uniform_int_distribution<int>(0, printer->get_count_of_marks());
     }
     void print_sequences()
     {

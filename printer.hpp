@@ -9,30 +9,30 @@ class Iprinter
 {
 public:
     virtual void print(std::size_t val) = 0;
-    virtual std::size_t get_range() = 0;
+    virtual std::size_t get_count_of_marks() = 0;
     virtual ~Iprinter() = default;
 };
 
 class hex_printer : public Iprinter
 {
 public:
-    hex_printer(std::size_t range) : range{range} {}
+    hex_printer() = default;
     void print(std::size_t val)
     {
         std::cout<<std::hex<<val;
     }
-    std::size_t get_range()
+    std::size_t get_count_of_marks()
     {
-        return range;
+        return marks_in_hex;
     }
 private:
-    std::size_t range{0};
+    std::size_t marks_in_hex{15};
 };
 
 class alphabet_printer : public Iprinter
 {
 public:
-    alphabet_printer(const std::set<char> &alphabet)
+    alphabet_printer(const std::set<char> &alphabet) : marks_in_alphabet{alphabet.size() - 1}
     {
         auto nr{0};
         for(auto i:alphabet)
@@ -40,19 +40,18 @@ public:
             dict[nr] = i;
             nr++;
         }
-        range = dict.size() - 1;
     }
     void print(std::size_t val)
     {
         std::cout<<dict[val];
     }
-    std::size_t get_range()
+    std::size_t get_count_of_marks()
     {
-        return range;
+        return marks_in_alphabet;
     }
 private:
     std::unordered_map<std::size_t, char> dict;
-    std::size_t range{0};
+    std::size_t marks_in_alphabet{0};
 };
 
 std::unique_ptr<Iprinter> printer_factory(std::optional<std::string> alphabet)
@@ -61,5 +60,5 @@ std::unique_ptr<Iprinter> printer_factory(std::optional<std::string> alphabet)
     {
         return std::make_unique<alphabet_printer>(std::set<char>(alphabet->begin(), alphabet->end()));
     }
-    return std::make_unique<hex_printer>(15);
+    return std::make_unique<hex_printer>();
 }

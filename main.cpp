@@ -1,21 +1,39 @@
-#include <memory>
 #include <cstddef>
 #include <iostream>
 #include <argparse/argparse.hpp>
+#include <optional>
 #include "random_seq_generator.hpp"
+
+std::size_t get_sequence_length(std::optional<std::size_t> args_sequence)
+{
+    std::size_t default_sequence_length{8};
+    if(args_sequence)
+    {
+        return *args_sequence;
+    }
+    return default_sequence_length;
+}
+
+std::size_t get_seuences_count(std::optional<std::size_t> args_sequences_count)
+{
+    std::size_t default_sequences_count{1};
+    if(args_sequences_count)
+    {
+        return *args_sequences_count;
+    }
+    return default_sequences_count;
+}
 
 int main(int argc, char **argv)
 {
     argparse::ArgumentParser program("rng");
     program.add_argument("-l")
         .help("length of generated sequences")
-        .default_value(std::size_t{8})
         .nargs(1, 1)
         .scan<'u', std::size_t>();
 
     program.add_argument("-n")
         .help("count of generated sequences")
-        .default_value(std::size_t{1})
         .nargs(1, 1)
         .scan<'u', std::size_t>();
 
@@ -36,9 +54,9 @@ int main(int argc, char **argv)
         std::exit(1);
     }
 
-    auto printer = printer_factory(program.present("-a"));
-    auto sequence_length = program.get<std::size_t>("-l");
-    auto sequences_count = program.get<std::size_t>("-n");
-    random_seq_generator rsg{sequence_length, sequences_count, std::move(printer)};
+
+    random_seq_generator rsg{get_sequence_length(program.present<std::size_t>("-l")),
+     get_seuences_count(program.present<std::size_t>("-n")),
+     printer_factory(program.present("-a"))};
     rsg.print_sequences();
 }
