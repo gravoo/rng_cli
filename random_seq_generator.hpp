@@ -9,7 +9,7 @@ class random_seq_generator
 {
 public:
     explicit random_seq_generator(std::size_t sequence_length, std::size_t count, std::unique_ptr<Iprinter> iprinter)
-    : sequence_length(sequence_length), count(count), printer(std::move(iprinter))
+    : sequence_length{sequence_length}, count{count}, printer{std::move(iprinter)}
     {
         random_enginge = std::default_random_engine(device());
         uniform_dist = std::uniform_int_distribution<int>(0, printer->get_range());

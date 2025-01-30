@@ -9,13 +9,13 @@ class Iprinter
 public:
     virtual void print(std::size_t val) = 0;
     virtual std::size_t get_range() = 0;
-    ~Iprinter() = default;
+    virtual ~Iprinter() = default;
 };
 
 class hex_printer : public Iprinter
 {
 public:
-    hex_printer(std::size_t range) : range(range) {}
+    hex_printer(std::size_t range) : range{range} {}
     void print(std::size_t val)
     {
         std::cout<<std::hex<<val;
