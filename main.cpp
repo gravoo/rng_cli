@@ -1,8 +1,10 @@
 #include <memory>
 #include <cstddef>
 #include <iostream>
+#include <set>
 #include <argparse/argparse.hpp>
 #include "random_seq_generator.hpp"
+
 
 int main(int argc, char **argv)
 {
@@ -38,10 +40,9 @@ int main(int argc, char **argv)
 
     auto default_hex_range{15};
     std::unique_ptr<Iprinter> printer = std::make_unique<hex_printer>(default_hex_range);
-
     if(auto alphabet = program.present("-a"))
     {
-        printer = std::make_unique<alphabet_printer>(*alphabet);
+        printer = std::make_unique<alphabet_printer>(std::set<char>(alphabet->begin(), alphabet->end()));
     }
 
     auto sequence_length = program.get<std::size_t>("-l");

@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_map>
-#include <string_view>
 #include <iostream>
 #include <set>
 
@@ -31,10 +30,10 @@ private:
 class alphabet_printer : public Iprinter
 {
 public:
-    alphabet_printer(std::string_view alphabet)
+    alphabet_printer(const std::set<char> &alphabet)
     {
         auto nr{0};
-        for(auto i:remove_duplicates(alphabet))
+        for(auto i:alphabet)
         {
             dict[nr] = i;
             nr++;
@@ -50,15 +49,6 @@ public:
         return range;
     }
 private:
-    std::set<char> remove_duplicates(std::string_view s)
-    {
-        std::set<char> resoult;
-        for(const auto &i:s)
-        {
-            resoult.insert(i);
-        }
-        return resoult;
-    }
     std::unordered_map<std::size_t, char> dict;
     std::size_t range{0};
 };
