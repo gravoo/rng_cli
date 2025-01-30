@@ -14,7 +14,7 @@ std::size_t get_sequence_length(std::optional<std::size_t> args_sequence)
     return default_sequence_length;
 }
 
-std::size_t get_seuences_count(std::optional<std::size_t> args_sequences_count)
+std::size_t get_sequences_count(std::optional<std::size_t> args_sequences_count)
 {
     std::size_t default_sequences_count{1};
     if(args_sequences_count)
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
 
     random_seq_generator rsg{get_sequence_length(program.present<std::size_t>("-l")),
-     get_seuences_count(program.present<std::size_t>("-n")),
+     get_sequences_count(program.present<std::size_t>("-n")),
      printer_factory(program.present("-a"))};
     rsg.print_sequences();
 }
