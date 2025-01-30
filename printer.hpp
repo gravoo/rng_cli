@@ -1,5 +1,7 @@
 #pragma once
 #include <unordered_map>
+#include <optional>
+#include <memory>
 #include <iostream>
 #include <set>
 
@@ -52,3 +54,12 @@ private:
     std::unordered_map<std::size_t, char> dict;
     std::size_t range{0};
 };
+
+std::unique_ptr<Iprinter> printer_factory(std::optional<std::string> alphabet)
+{
+    if(alphabet)
+    {
+        return std::make_unique<alphabet_printer>(std::set<char>(alphabet->begin(), alphabet->end()));
+    }
+    return std::make_unique<hex_printer>(15);
+}
