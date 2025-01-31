@@ -1,47 +1,45 @@
 #include <cstddef>
 #include <iostream>
-#include <random>
 #include <argparse/argparse.hpp>
+#include <optional>
+#include "random_seq_generator.hpp"
 
-class random_seq_generator
+std::size_t get_sequence_length(std::optional<std::size_t> args_sequence)
 {
-public:
-    explicit random_seq_generator(std::size_t number_length, std::size_t count) : sequence_length(number_length), count(count)
+    std::size_t default_sequence_length{8};
+    if(args_sequence)
     {
-        random_enginge = std::default_random_engine(device());
-        uniform_dist = std::uniform_int_distribution<int>(0, 15);
+        return *args_sequence;
     }
-    void print_sequences()
+    return default_sequence_length;
+}
+
+std::size_t get_sequences_count(std::optional<std::size_t> args_sequences_count)
+{
+    std::size_t default_sequences_count{1};
+    if(args_sequences_count)
     {
-        for(auto j{0}; j<count; j++)
-        {
-            for(auto i{0}; i<sequence_length; i++)
-            {
-                std::cout<<std::hex<<uniform_dist(random_enginge);
-            }
-            std::cout<<std::endl;
-        }
+        return *args_sequences_count;
     }
-private:
-    std::random_device device;
-    std::default_random_engine random_enginge;
-    std::uniform_int_distribution<int> uniform_dist;
-    std::size_t sequence_length{0};
-    std::size_t count{0};
-};
+    return default_sequences_count;
+}
 
 int main(int argc, char **argv)
 {
     argparse::ArgumentParser program("rng");
-    program.add_argument("-l","--l")
+    program.add_argument("-l")
         .help("length of generated sequences")
-        .default_value(std::size_t{8})
+        .nargs(1, 1)
         .scan<'u', std::size_t>();
 
-    program.add_argument("-n","--n")
+    program.add_argument("-n")
         .help("count of generated sequences")
-        .default_value(std::size_t{1})
+        .nargs(1, 1)
         .scan<'u', std::size_t>();
+
+    program.add_argument("-a")
+        .nargs(1, 1)
+        .help("set of characters for random sequences");
 
     program.add_description("Generate random number sequence");
 
@@ -56,8 +54,11 @@ int main(int argc, char **argv)
         std::exit(1);
     }
 
-    auto sequence_length = program.get<std::size_t>("-l");
-    auto sequences_count = program.get<std::size_t>("-n");
-    random_seq_generator rsg(sequence_length, sequences_count);
+
+    random_seq_generator rsg{get_sequence_length(program.present<std::size_t>("-l")),
+     get_sequences_count(program.present<std::size_t>("-n")),
+     printer_factory(program.present("-a"))};
+
+    rsg.generate_sequences();
     rsg.print_sequences();
 }
