@@ -58,5 +58,7 @@ int main(int argc, char **argv)
     random_seq_generator rsg{get_sequence_length(program.present<std::size_t>("-l")),
      get_sequences_count(program.present<std::size_t>("-n")),
      printer_factory(program.present("-a"))};
+
+    rsg.generate_sequences();
     rsg.print_sequences();
 }

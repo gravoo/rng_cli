@@ -4,11 +4,12 @@
 #include <memory>
 #include <iostream>
 #include <set>
+#include <vector>
 
 class Iprinter
 {
 public:
-    virtual void print(std::size_t val) = 0;
+    virtual void print(const std::vector<int> &) = 0;
     virtual std::size_t get_count_of_marks() = 0;
     virtual ~Iprinter() = default;
 };
@@ -17,9 +18,13 @@ class hex_printer : public Iprinter
 {
 public:
     hex_printer() = default;
-    void print(std::size_t val)
+    void print(const std::vector<int> &sequence)
     {
-        std::cout<<std::hex<<val;
+        for(const auto &i:sequence)
+        {
+            std::cout<<std::hex<<i;
+        }
+        std::cout<<std::endl;
     }
     std::size_t get_count_of_marks()
     {
@@ -41,9 +46,13 @@ public:
             nr++;
         }
     }
-    void print(std::size_t val)
+    void print(const std::vector<int> &sequence)
     {
-        std::cout<<dict[val];
+        for(const auto &i:sequence)
+        {
+            std::cout<<dict[i];
+        }
+        std::cout<<std::endl;
     }
     std::size_t get_count_of_marks()
     {
