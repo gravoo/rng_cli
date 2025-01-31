@@ -106,22 +106,22 @@ public:
 private:
     std::array<char,16> hex{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 };
-
+template<typename T>
 struct Meas
 {
-    std::chrono::nanoseconds standard;
-    std::chrono::nanoseconds lookup;
-    std::chrono::nanoseconds ostream;
-    std::chrono::nanoseconds fwrite;
-    std::chrono::nanoseconds fwrite_lookup;
+    T standard;
+    T lookup;
+    T ostream;
+    T fwrite;
+    T fwrite_lookup;
 };
 
 int main(int argc, char **argv)
 {
-    const auto sequence_length{1000};
-    const auto sequences_count{10};
+    const auto sequence_length{10000};
+    const auto sequences_count{100};
     const auto test_runs{10};
-    std::vector<Meas> meas;
+    std::vector<Meas<std::chrono::milliseconds>> meas;
     for(auto i{0}; i < test_runs; i++)
     {
         random_seq_generator rsg_standard_printer{sequence_length, sequences_count, std::make_unique<test_iostream_printer>()};
@@ -159,15 +159,18 @@ int main(int argc, char **argv)
         stop = std::chrono::steady_clock::now();
         auto fwrite_lookup_delta = stop - start;
         meas.push_back(Meas{
-         std::chrono::duration_cast<std::chrono::nanoseconds> (standard_delta),
-         std::chrono::duration_cast<std::chrono::nanoseconds> (lookup_delta),
-         std::chrono::duration_cast<std::chrono::nanoseconds> (ostream_delta),
-         std::chrono::duration_cast<std::chrono::nanoseconds> (fwrite_delta),
-         std::chrono::duration_cast<std::chrono::nanoseconds> (fwrite_lookup_delta)});
+         std::chrono::duration_cast<std::chrono::milliseconds> (standard_delta),
+         std::chrono::duration_cast<std::chrono::milliseconds> (lookup_delta),
+         std::chrono::duration_cast<std::chrono::milliseconds> (ostream_delta),
+         std::chrono::duration_cast<std::chrono::milliseconds> (fwrite_delta),
+         std::chrono::duration_cast<std::chrono::milliseconds> (fwrite_lookup_delta)});
     }
     std::cout<<"MEAS RESOULT\nstandard lookup ostream fwrite fwrite_lookup\n";
     for(auto m:meas)
     {
-        std::cout<<m.standard.count()<<" "<<m.lookup.count()<<" "<<m.ostream.count()<<" "<<m.fwrite.count()<<" "<<m.fwrite_lookup.count()<<"\n";
+        std::cout<<m.standard.count()<<" "<<m.lookup.count()<<" "<<m.ostream.count()<<" "<<m.fwrite.count()<<" "<<m.fwrite_lookup.count();
+        std::cout<<" min: "<<std::min({m.standard.count(), m.lookup.count(), m.ostream.count(), m.fwrite.count(), m.fwrite_lookup.count()});
+        std::cout<<" max: "<<std::max({m.standard.count(), m.lookup.count(), m.ostream.count(), m.fwrite.count(), m.fwrite_lookup.count()});
+        std::cout<<std::endl;
     }
 }
