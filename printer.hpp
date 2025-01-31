@@ -1,5 +1,4 @@
 #pragma once
-#include <unordered_map>
 #include <optional>
 #include <memory>
 #include <iostream>
@@ -37,15 +36,8 @@ private:
 class alphabet_printer : public Iprinter
 {
 public:
-    alphabet_printer(const std::set<char> &alphabet) : marks_in_alphabet{alphabet.size() - 1}
-    {
-        auto nr{0};
-        for(auto i:alphabet)
-        {
-            dict[nr] = i;
-            nr++;
-        }
-    }
+    alphabet_printer(const std::set<char> &alphabet) : dict{alphabet.begin(), alphabet.end()}, marks_in_alphabet{dict.size() - 1}
+    {}
     void print(const std::vector<int> &sequence)
     {
         for(const auto &i:sequence)
@@ -59,7 +51,7 @@ public:
         return marks_in_alphabet;
     }
 private:
-    std::unordered_map<std::size_t, char> dict;
+    std::vector<char> dict;
     std::size_t marks_in_alphabet{0};
 };
 
