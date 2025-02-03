@@ -19,7 +19,7 @@ public:
         }
         std::cout<<std::endl;
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return marks_in_hex;
     }
@@ -44,7 +44,7 @@ public:
         }
         std::cout<<std::endl;
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return hex.size() - 1;
     }
@@ -67,7 +67,7 @@ public:
         std::cout.unsetf(std::ios::basefield);
         std::cout<<std::endl;
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return marks_in_hex;
     }
@@ -92,7 +92,7 @@ public:
         buffer << "\n";
         std::fwrite(buffer.str().c_str(), 1, buffer.str().size(), stdout);
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return marks_in_hex;
     }
@@ -121,7 +121,7 @@ public:
     {
         return std::vector<char>{};
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return hex.size() - 1;
     }

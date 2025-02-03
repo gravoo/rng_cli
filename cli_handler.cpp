@@ -62,6 +62,7 @@ Config get_config_from_cli(int argc, char **argv, std::string length_option, std
         std::cerr << program;
         std::exit(1);
     }
+
     auto sequence_length = get_sequence_length(program.present<std::size_t>(length_option));
     auto sequence_count = get_sequences_count(program.present<std::size_t>(count_option));
     auto alphabet = get_alphabet(program.present<std::string>(alphabet_option));

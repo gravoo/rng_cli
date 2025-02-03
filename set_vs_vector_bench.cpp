@@ -20,7 +20,7 @@ public:
         }
         std::cout<<std::endl;
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return marks_in_alphabet;
     }
@@ -46,7 +46,7 @@ public:
         }
         std::cout<<std::endl;
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return dict.size() - 1;
     }
@@ -75,7 +75,7 @@ public:
         }
         std::cout<<std::endl;
     }
-    std::size_t get_count_of_marks()
+    std::size_t get_dict_size()
     {
         return dict.size() - 1;
     }
