@@ -3,6 +3,90 @@
 #include <vector>
 #include "printer.hpp"
 #include <chrono>
+#include <unordered_set>
+#include <algorithm>
+#include <set>
+
+class alphabet_set_printer : public Iprinter
+{
+public:
+    alphabet_set_printer(std::set<char> alphabet) : dict{alphabet.begin(), alphabet.end()}, marks_in_alphabet{dict.size() - 1}
+    {}
+    void print(const std::vector<int> &sequence)
+    {
+        for(const auto &i:sequence)
+        {
+            std::cout<<dict[i];
+        }
+        std::cout<<std::endl;
+    }
+    std::size_t get_count_of_marks()
+    {
+        return marks_in_alphabet;
+    }
+    std::vector<char> get_dict()
+    {
+        return dict;
+    }
+private:
+    std::vector<char> dict;
+    std::size_t marks_in_alphabet{0};
+};
+
+class alphabet_printer_unordered : public Iprinter
+{
+public:
+    alphabet_printer_unordered(std::unordered_set<char> alphabet) : dict{alphabet.begin(), alphabet.end()}
+    {}
+    void print(const std::vector<int> &sequence)
+    {
+        for(const auto &i:sequence)
+        {
+            std::cout<<dict[i];
+        }
+        std::cout<<std::endl;
+    }
+    std::size_t get_count_of_marks()
+    {
+        return dict.size() - 1;
+    }
+    std::vector<char> get_dict()
+    {
+        return dict;
+    }
+private:
+    std::vector<char> dict;
+};
+
+class alphabet_printer_vector : public Iprinter
+{
+public:
+    alphabet_printer_vector(std::vector<char> alphabet) : dict(alphabet)
+    {
+        std::sort(dict.begin(), dict.end());
+        auto last = std::unique(dict.begin(), dict.end());
+        dict.erase(last, dict.end());
+    }
+    void print(const std::vector<int> &sequence)
+    {
+        for(const auto &i:sequence)
+        {
+            std::cout<<dict[i];
+        }
+        std::cout<<std::endl;
+    }
+    std::size_t get_count_of_marks()
+    {
+        return dict.size() - 1;
+    }
+    std::vector<char> get_dict()
+    {
+        return dict;
+    }
+private:
+    std::vector<char> dict;
+};
+
 std::vector<char> generate_alphabet(std::vector<char> origin, std::size_t num_of_copy)
 {
     std::vector<char> result;
@@ -35,10 +119,10 @@ int main()
     std::cout<<vector_delta.count()<<" vector time \n";
 
     start = std::chrono::steady_clock::now();
-    alphabet_printer standard_printer{std::set<char>(alphabet.begin(), alphabet.end())};
+    alphabet_set_printer set_printer{std::set<char>(alphabet.begin(), alphabet.end())};
     stop = std::chrono::steady_clock::now();
     auto standard_delta = stop - start;
-    print_sum(standard_printer.get_dict());
+    print_sum(set_printer.get_dict());
     std::cout<<standard_delta.count()<<" set time \n";
 
     start = std::chrono::steady_clock::now();

@@ -5,6 +5,7 @@
 #include "printer.hpp"
 #include "random_seq_generator.hpp"
 #include <chrono>
+#include <sstream>
 
 class test_iostream_printer : public Iprinter
 {
@@ -24,9 +25,10 @@ public:
     }
     std::vector<char> get_dict()
     {
-        return std::vector<char>{};
+        return std::vector<char>{hex.begin(), hex.end()};
     }
 private:
+    std::array<char,16> hex{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     std::size_t marks_in_hex{15};
 };
 
@@ -48,7 +50,7 @@ public:
     }
     std::vector<char> get_dict()
     {
-        return std::vector<char>{};
+        return std::vector<char>{hex.begin(), hex.end()};
     }
 private:
     std::array<char,16> hex{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -158,25 +160,25 @@ int main(int argc, char **argv)
         stop = std::chrono::steady_clock::now();
         auto lookup_delta = stop - start;
 
-        // random_seq_generator rsg_ostream_printer{sequence_length, sequences_count, std::make_unique<test_ostream_printer>()};
-        // rsg_ostream_printer.generate_sequences();
-        // start = std::chrono::steady_clock::now();
-        // rsg_ostream_printer.print_sequences();
-        // stop = std::chrono::steady_clock::now();
+        random_seq_generator rsg_ostream_printer{sequence_length, sequences_count, std::make_unique<test_ostream_printer>()};
+        rsg_ostream_printer.generate_sequences();
+        start = std::chrono::steady_clock::now();
+        rsg_ostream_printer.print_sequences();
+        stop = std::chrono::steady_clock::now();
         auto ostream_delta = stop - start;
 
-        // random_seq_generator rsg_fwrite_printer{sequence_length, sequences_count, std::make_unique<test_fwrite_printer>()};
-        // rsg_fwrite_printer.generate_sequences();
-        // start = std::chrono::steady_clock::now();
-        // rsg_fwrite_printer.print_sequences();
-        // stop = std::chrono::steady_clock::now();
+        random_seq_generator rsg_fwrite_printer{sequence_length, sequences_count, std::make_unique<test_fwrite_printer>()};
+        rsg_fwrite_printer.generate_sequences();
+        start = std::chrono::steady_clock::now();
+        rsg_fwrite_printer.print_sequences();
+        stop = std::chrono::steady_clock::now();
         auto fwrite_delta = stop - start;
 
-        // random_seq_generator rsg_fwrite_lookup_printer{sequence_length, sequences_count, std::make_unique<test_fwrite_lookup_printer>()};
-        // rsg_fwrite_lookup_printer.generate_sequences();
-        // start = std::chrono::steady_clock::now();
-        // rsg_fwrite_lookup_printer.print_sequences();
-        // stop = std::chrono::steady_clock::now();
+        random_seq_generator rsg_fwrite_lookup_printer{sequence_length, sequences_count, std::make_unique<test_fwrite_lookup_printer>()};
+        rsg_fwrite_lookup_printer.generate_sequences();
+        start = std::chrono::steady_clock::now();
+        rsg_fwrite_lookup_printer.print_sequences();
+        stop = std::chrono::steady_clock::now();
         auto fwrite_lookup_delta = stop - start;
         meas.push_back(Meas{
          std::chrono::duration_cast<std::chrono::nanoseconds> (standard_delta),
@@ -188,7 +190,7 @@ int main(int argc, char **argv)
     std::cout<<"MEAS RESOULT\nstandard lookup ostream fwrite fwrite_lookup\n";
     for(auto m:meas)
     {
-        std::cout<<std::dec<<m.standard.count()<<" "<<m.lookup.count();//<<" "<<m.ostream.count()<<" "<<m.fwrite.count()<<" "<<m.fwrite_lookup.count();
+        std::cout<<std::dec<<m.standard.count()<<" "<<m.lookup.count()<<" "<<m.ostream.count()<<" "<<m.fwrite.count()<<" "<<m.fwrite_lookup.count();
         std::cout<<" min: "<<std::min({m.standard.count(), m.lookup.count(), m.ostream.count(), m.fwrite.count(), m.fwrite_lookup.count()});
         std::cout<<" max: "<<std::max({m.standard.count(), m.lookup.count(), m.ostream.count(), m.fwrite.count(), m.fwrite_lookup.count()});
         std::cout<<std::endl;
