@@ -1,2 +1,6 @@
-build
+# CMake
+build*
+compile_commands.json
+
+# VSCode
 .cache
