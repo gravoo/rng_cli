@@ -112,7 +112,7 @@ TEST_P(BenchmarkSequenceGeneration, lookupTableBased)
     return result;
   });
 }
-
+namespace {
 auto generatedSequences = {
   generateSequence(1 << 3),  generateSequence(1 << 4),
   generateSequence(1 << 5),  generateSequence(1 << 6),
@@ -122,6 +122,7 @@ auto generatedSequences = {
   generateSequence(1 << 13), generateSequence(1 << 14),
   generateSequence(1 << 15), generateSequence(1 << 16),
 };
+}
 
 INSTANTIATE_TEST_SUITE_P(Common,
                          BenchmarkSequenceGeneration,
